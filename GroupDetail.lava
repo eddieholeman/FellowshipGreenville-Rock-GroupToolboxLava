@@ -52,7 +52,10 @@
 		<div class="col-md-6">
 		<h4>Group Details:</h4>
 		{% for attribute in Group.AttributeValues %}
+		{% assign isgrid = attribute.AttributeIsGridColumn %}
+		{% if isgrid == 'true' %}
 		<strong>{{ attribute.AttributeName }}:</strong> {{ attribute.ValueFormatted }}<br />
+		{% endif %}
 		{% endfor %}
 		</div>
 
