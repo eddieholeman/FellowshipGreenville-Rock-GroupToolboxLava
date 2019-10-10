@@ -33,6 +33,7 @@
 
 	{{ Group.Description }}
 
+{% comment %}
 	{% if Group.GroupType.GroupCapacityRule != 'None' and  Group.GroupCapacity != '' %}
 		{% assign warningLevel = 'warning' %}
 
@@ -47,16 +48,26 @@
 			<div class="alert alert-{{ warningLevel }} margin-t-sm">This group is over capacity by {{ overageAmount }} {{ 'individual' | PluralizeForQuantity:overageAmount }}.</div>
 		{% endif %}
 	{% endif %}
-
+{% endcomment %}
+	
 	<div class="row">
 		<div class="col-md-6">
 		<h4>Group Details:</h4>
+
+		<a href="/roster?GroupId={{ PageParameter:'GroupId' }}" target="_blank" class="btn btn-info">Printable Roster</a><br /><br /> 
+		{% if Group.GroupTypeId == '170' %}
+		<a href="/rosterparents?GroupId={{ PageParameter:'GroupId' }}" target="_blank" class="btn btn-success">Roster with Parents</a><br /><br />
+		{% endif %}
 		{% for attribute in Group.AttributeValues %}
-		{% assign isgrid = attribute.AttributeIsGridColumn %}
-		{% if isgrid == 'true' %}
-		<strong>{{ attribute.AttributeName }}:</strong> {{ attribute.ValueFormatted }}<br />
+		{% if attribute.AttributeName == 'Date Started' or attribute.AttributeName == 'Team Directory' or attribute.AttributeName == 'Opportunity Title' or attribute.AttributeName == 'Opportunity Date Range' or attribute.AttributeName == 'Opportunity Location' or attribute.AttributeName == 'Trip Documents Link' or attribute.AttributeName == 'Fundraising Page Link' or attribute.AttributeName == 'CG Resources'  or attribute.AttributeName == 'Resources' or attribute.AttributeName == 'NG Resources' %}
+			{% if attribute.AttributeName == 'Team Directory' or attribute.AttributeName == 'Fundraising Page Link' or attribute.AttributeName == 'Trip Documents Link' or attribute.AttributeName == 'CG Resources' or attribute.AttributeName == 'Resources' or attribute.AttributeName == 'NG Resources' %}
+				{{ attribute.ValueFormatted }}<br /><br />
+			{% else %}
+				<strong>{{ attribute.AttributeName }}:</strong> {{ attribute.ValueFormatted }}<br />
+			{% endif %}
 		{% endif %}
 		{% endfor %}
+
 		</div>
 
 		<div class="col-md-6">
@@ -73,6 +84,7 @@
 		</ul>
 		</div>
 	</div>
+
 {% comment %}
 	{% if AllowedActions.Edit == true %}
 	<div class="actions margin-v-md clearfix">
@@ -112,6 +124,7 @@
 	{% comment %} Group Roster Tab {% endcomment %}
 	{% if LinkedPages.RosterPage == CurrentPage.Path %}
 
+{% comment %}	
 		{% if countPending > -1 %}
 			{% assign icountPending = 0 %}
 
@@ -177,6 +190,7 @@
 			{% endfor %}
 				</div>
 		{% endif %}
+{% endcomment %}
 
 		{% if countActive > -1 %}
 			{% assign icountActive = 0 %}
@@ -201,6 +215,7 @@
 						<div class="pull-left">
 							<strong>{{ member.Person.FullName }}</strong>
 							<small>({{ member.GroupRole.Name }})</small>
+							<small>{{ member.Person.BirthMonth }}/{{ member.Person.BirthDay }}</small>
 
 							{% for phone in member.Person.PhoneNumbers %}
 							<br />{% if phone.IsUnlisted != true %}<a href="tel:{{ phone.NumberFormatted }}">{{ phone.NumberFormatted }}</a>{% else %}Unlisted{% endif %}  <small>({{ phone.NumberTypeValue.Value }})</small>
@@ -242,6 +257,7 @@
 			{% endfor %}
 
 		{% endif %}
+{% comment %}
 
 		{% if countInactive > -1 %}
 			{% assign icountInactive = 0 %}
@@ -307,6 +323,7 @@
 			{% endfor %}
 
 		{% endif %}
+{% endcomment %}
 
 		<div class="pull-right margin-b-md">
 			{% if AllowedActions.Edit == true %}
